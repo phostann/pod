@@ -1,0 +1,6 @@
+node_uid: "4e80d157-d690-4d50-9d9d-6466b72a6e2e"
+relay_server_host: "http://localhost:8080"
+minio_endpoint: "http://localhost:9000"
+minio_access_key: "yoo-oss-access-key"
+minio_secret_key: "yoo-oss-secret-key"
+minio_bucket: "resources"

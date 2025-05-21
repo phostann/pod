@@ -26,6 +26,8 @@ func main() {
 		log.Fatalf("加载配置失败: %v", err)
 	}
 
+	log.Printf("配置: %+v", cfg)
+
 	// 创建连接的URL
 	serverURL := ws.GenerateServerURL(cfg.RelayServerHost, cfg.NodeUID)
 	log.Printf("连接到 %s", serverURL)
@@ -50,7 +52,7 @@ func main() {
 	wsManager.RegisterHandler(string(model.InitNode), msgHandler.HandleInitNode)
 	wsManager.RegisterHandler(string(model.UpdateProject), msgHandler.HandleUpdateProject)
 	wsManager.RegisterHandler(string(model.UpdateResources), msgHandler.HandleUpdateResource)
-
+	wsManager.RegisterHandler(string(model.Sync), msgHandler.HandleSync)
 	// 启动一个goroutine来处理重连逻辑
 	go wsManager.MaintainConnection(ctx)
 

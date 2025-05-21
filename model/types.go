@@ -9,6 +9,7 @@ const (
 	UpdateProject   MessageType = "update_project"   // 全量更新项目
 	UpdateResources MessageType = "update_resources" // 增量更新资源
 	ErrorReport     MessageType = "error_report"     // 错误上报
+	Sync            MessageType = "sync"             // 同步资源
 )
 
 // TextMessage WebSocket消息结构
@@ -27,13 +28,13 @@ type ErrorData struct {
 
 // DownloadInfo 下载信息结构体
 type DownloadInfo struct {
-	FileID      string // 文件唯一标识
-	FileName    string // 文件名
-	FileSize    int64  // 文件大小
-	ChunkSize   int64  // 分片大小
-	TotalChunks int    // 分片总数
-	FileHash    string // 文件哈希值
-	DownloadUrl string // 下载URL
+	FileID      string `json:"file_id"`      // 文件唯一标识
+	FileName    string `json:"file_name"`    // 文件名
+	FileSize    int64  `json:"file_size"`    // 文件大小
+	ChunkSize   int64  `json:"chunk_size"`   // 分片大小
+	TotalChunks int    `json:"total_chunks"` // 分片总数
+	FileHash    string `json:"file_hash"`    // 文件哈希值
+	DownloadUrl string `json:"download_url"` // 下载URL
 }
 
 // FileInfo 文件信息结构

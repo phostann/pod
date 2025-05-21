@@ -55,21 +55,3 @@ func (r *ErrorReporter) ReportError(source string, errMsg string, taskID string)
 	log.Printf("已上报错误: %s - %s", source, errMsg)
 	return nil
 }
-
-// ExtractTaskID 从消息数据中提取任务ID
-func ExtractTaskID(data interface{}) string {
-	if data == nil {
-		return ""
-	}
-
-	// 尝试将data转换为map并提取taskID
-	if m, ok := (data).(map[string]interface{}); ok {
-		if taskID, exists := m["task_id"]; exists {
-			if taskIDStr, ok := taskID.(string); ok {
-				return taskIDStr
-			}
-		}
-	}
-
-	return ""
-}

@@ -31,8 +31,29 @@ func NewFileDownloader(relayServerHost string) *FileDownloader {
 	}
 }
 
-// DownloadFile 下载文件到指定目录，使用分片下载
+// DownloadFile 直接下载文件到指定目录
 func (d *FileDownloader) DownloadFile(filename string, destDir string, fileNames ...string) error {
+	downloadUrl, err := url.Parse(fmt.Sprintf("http://%s/sync/download", d.relayServerHost))
+	if err != nil {
+		return fmt.Errorf("解析下载URL失败: %v", err)
+	}
+
+	queryParams := url.Values{}
+	queryParams.Add("filename", filename)
+
+	downloadUrl.RawQuery = queryParams.Encode()
+
+	resp, err := http.Get(downloadUrl.String())
+	if err != nil {
+		return fmt.Errorf("获取文件信息失败: %v", err)
+	}
+	defer resp.Body.Close()
+
+	return nil
+}
+
+// DownloadFileInChunks 下载文件到指定目录，使用分片下载
+func (d *FileDownloader) DownloadFileInChunks(filename string, destDir string, fileNames ...string) error {
 	var targetFileName *string
 	if len(fileNames) > 0 {
 		targetFileName = &fileNames[0]
@@ -49,8 +70,8 @@ func (d *FileDownloader) DownloadFile(filename string, destDir string, fileNames
 	}
 
 	queryParams := url.Values{}
-	queryParams.Add("fileName", filename)
-	queryParams.Add("chunkSize", strconv.Itoa(int(chunkSize)))
+	queryParams.Add("file_name", filename)
+	queryParams.Add("chunk_size", strconv.Itoa(int(chunkSize)))
 	downloadUrl.RawQuery = queryParams.Encode()
 
 	resp, err := http.Get(downloadUrl.String())
@@ -140,8 +161,8 @@ func (d *FileDownloader) DownloadFile(filename string, destDir string, fileNames
 			}
 
 			params := url.Values{}
-			params.Add("fileID", downloadInfo.FileID)
-			params.Add("chunkIndex", strconv.Itoa(chunkIndex))
+			params.Add("file_id", downloadInfo.FileID)
+			params.Add("chunk_index", strconv.Itoa(chunkIndex))
 
 			chunkURL.RawQuery = params.Encode()
 
